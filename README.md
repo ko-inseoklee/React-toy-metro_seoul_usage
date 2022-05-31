@@ -41,3 +41,8 @@ To learn React, check out the [React documentation](https://reactjs.org/).
  1. 역별 승하차 인원 수를 보여주는 막대 차트(미구현).
  2. 역별 이용자 비율을 보여주는 파이 차트(미구현).
  3. 역별 연간 이용자 수 변화를 보여주는 라인 차트(미구현).
+
+
+### TODO
+ `Theme Component 이용해보기`
+ `Router 구축`
