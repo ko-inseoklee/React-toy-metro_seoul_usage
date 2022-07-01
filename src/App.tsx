@@ -1,15 +1,20 @@
 import React from 'react';
-import {ChakraProvider} from '@chakra-ui/react';
-import theme from './theme/metro_theme';
+import {ChakraProvider, Divider} from '@chakra-ui/react';
+import theme from './theme/MetroThemes';
 import Home from './pages/home/Home';
+import MetroRouter from './config/router';
+import Header from './components/Header';
 
 
 const App = () => {
-  return(
+  return (
     <ChakraProvider theme={theme}>
-      <Home></Home>
+      <>
+        <Divider />
+        <MetroRouter></MetroRouter>      
+      </>
     </ChakraProvider>
-  )
+  );
 }
 
 export default App;
