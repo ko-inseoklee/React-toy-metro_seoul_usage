@@ -24,7 +24,7 @@ const Header = () => {
             <Link to={Routers.METROA2Z.path}>
                 <div 
                     style={HeaderComponentStyle}>
-                    역별 첫, 막차 시간
+                    역별 노선 현황
                 </div>
             </Link>
             <Link to={Routers.POPULATIONSTAT.path}>

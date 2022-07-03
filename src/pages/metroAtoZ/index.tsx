@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { GetStation } from "../../api/GetStation";
 import { useGetMetroAtoZ } from "../../api/metAtoZ/MetAtoZAPI";
 import Header from "../../components/Header";
+import { InputStyle, lineStyle } from "./StationInputStyle";
 
  const MetroAtoZ = () => {
     
@@ -18,6 +19,9 @@ import Header from "../../components/Header";
             row: []
         }
     })
+    const [resultStation,setResultStation] = useState("");
+
+    const [lines, setLines] = useState<any>([]);
     // const {data, error} = GetStation(line,station);
 
     const OnClick = async () => {
@@ -26,10 +30,27 @@ import Header from "../../components/Header";
         setResult((prev) => {
             prev.SearchInfoBySubwayNameService.RESULT.CODE = foo["SearchInfoBySubwayNameService"]["RESULT"]["CODE"];
             prev.SearchInfoBySubwayNameService.RESULT.MESSAGE = foo["SearchInfoBySubwayNameService"]["RESULT"]["MESSAGE"];
+            for(let i = 0; i < foo["SearchInfoBySubwayNameService"]["row"].length; i++){
+                // console.log(foo["SearchInfoBySubwayNameService"]["row"][i]);
+                prev.SearchInfoBySubwayNameService.row.concat(foo["SearchInfoBySubwayNameService"]["row"][i]);
+                
+            }
             return prev;
         });
-        console.log(foo["SearchInfoBySubwayNameService"]["RESULT"]["CODE"]);
-        console.log(result);
+
+        setLines((prev: any) => {
+            const temp = [];
+            for(let i = 0; i < foo["SearchInfoBySubwayNameService"]["row"].length; i++){
+                const tmp = foo["SearchInfoBySubwayNameService"]["row"][i]["LINE_NUM"];
+                temp.push(tmp);
+            }
+            prev = temp;
+            return prev;
+        })
+        console.log("line!");
+        console.log(lines);
+        
+        setResultStation(foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"]);
         setStation("");
     }
 
@@ -48,7 +69,7 @@ import Header from "../../components/Header";
         <div>
             <Header />
             <form >
-                <select name="lines" onChange={OnSelectLine}>
+                {/* <select name="lines" onChange={OnSelectLine}>
                     <option value="01호선">01호선</option>
                     <option value="1호선">1호선</option>
                     <option value="2호선">2호선</option>
@@ -59,11 +80,22 @@ import Header from "../../components/Header";
                     <option value="7호선">7호선</option>
                     <option value="8호선">8호선</option>
                     <option value="9호선">9호선</option>
-                </select>
-                <input type="text" name="station" onChange={OnChange} value={station}/>
+                </select> */}
+                <input style={InputStyle}type="text" name="station" onChange={OnChange} value={station} placeholder="역을 제외하고 입력해주세요(ex. 강남역 -> 강남)"/>
                 <input type="button" value="Click me" onClick={OnClick}/>
             </form>
-            <div>{}</div>
+            <div>
+                <div style={lineStyle}>
+                    검색결과: {resultStation}역
+                </div>
+                {lines.map((e:any) =>{
+                    return (
+                        <div style={lineStyle}>
+                            {e}
+                        </div>
+                    )
+                })}
+            </div>
         </div>
     );
 };
