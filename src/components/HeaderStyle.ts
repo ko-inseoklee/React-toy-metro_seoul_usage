@@ -18,3 +18,11 @@ export const HeaderStyle = {
     justifyContent: "center",
     alignItems: "center",
 }
+
+export const ButtonStyle = {
+    backgroundColor: colors.primary[700],
+    color: colors.error[900],
+    border: "1px solid",
+    padding: "5px",
+
+}

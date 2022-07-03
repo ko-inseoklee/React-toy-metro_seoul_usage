@@ -1,12 +1,20 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Routers from "../config/router/Routes";
-import { HeaderComponentStyle, HeaderStyle } from "./HeaderStyle";
+import { ButtonStyle, HeaderComponentStyle, HeaderStyle } from "./HeaderStyle";
 
 
 
 const Header = () => {
+    const [isExpanded, setIsExpanded] = useState(true);
+
+    const ToggleHeader = () => {
+        setIsExpanded((prev) => !prev);
+    }
+
     return (
-        <div style={HeaderStyle}>
+        isExpanded?
+        (<div style={HeaderStyle}>
             <Link to={Routers.HOME.path}>
                 <div 
                     style={HeaderComponentStyle}>
@@ -31,7 +39,14 @@ const Header = () => {
                     역별 유,무임 승차 인원
                 </div>
             </Link>
+        <input style={ButtonStyle} type="button" value="숨기기" onClick={ToggleHeader} />
         </div>
+        )
+        : (   
+            <div style={HeaderStyle}>
+                <input style={ButtonStyle} type="button" value="펼치기" onClick={ToggleHeader} />
+            </div>
+        )
     );
 };
 
