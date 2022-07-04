@@ -21,7 +21,7 @@ const Home = () => {
             </div>
             <Divider />
             <div style={HomeBodyStyle}>
-                <input style={HomeInputStyle} type="button" value="역별 첫, 막차 시간" name={Routers.METROA2Z.path} onClick={onClick}/>
+                <input style={HomeInputStyle} type="button" value="역별 노선 현황" name={Routers.METROA2Z.path} onClick={onClick}/>
                 <input style={HomeInputStyle} type="button" value="역별 이용 인구" name={Routers.POPULATIONSTAT.path} onClick={onClick}/>
                 <input style={HomeInputStyle} type="button" value="역별 유,무임 승차 인원" name={Routers.FREEORCASH.path} onClick={onClick}/>
             </div>

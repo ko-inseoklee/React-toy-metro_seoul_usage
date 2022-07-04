@@ -9,48 +9,36 @@ import { InputStyle, lineStyle } from "./StationInputStyle";
     
     const [station, setStation] = useState<string>("");
     const [line, setLine] = useState<string>("01호선");
-    const [result, setResult] = useState({
-        SearchInfoBySubwayNameService: {
-            RESULT: {
-                CODE: "",
-                MESSAGE: "",
-            },
-            list_total_count: 0,
-            row: []
-        }
-    })
     const [resultStation,setResultStation] = useState("");
 
     const [lines, setLines] = useState<any>([]);
     // const {data, error} = GetStation(line,station);
 
     const OnClick = async () => {
-        const data = GetStation(line,station);
-        const foo = await data.then((result) => result.data);
-        setResult((prev) => {
-            prev.SearchInfoBySubwayNameService.RESULT.CODE = foo["SearchInfoBySubwayNameService"]["RESULT"]["CODE"];
-            prev.SearchInfoBySubwayNameService.RESULT.MESSAGE = foo["SearchInfoBySubwayNameService"]["RESULT"]["MESSAGE"];
-            for(let i = 0; i < foo["SearchInfoBySubwayNameService"]["row"].length; i++){
-                // console.log(foo["SearchInfoBySubwayNameService"]["row"][i]);
-                prev.SearchInfoBySubwayNameService.row.concat(foo["SearchInfoBySubwayNameService"]["row"][i]);
-                
-            }
-            return prev;
-        });
-
-        setLines((prev: any) => {
-            const temp = [];
-            for(let i = 0; i < foo["SearchInfoBySubwayNameService"]["row"].length; i++){
-                const tmp = foo["SearchInfoBySubwayNameService"]["row"][i]["LINE_NUM"];
-                temp.push(tmp);
-            }
-            prev = temp;
-            return prev;
-        })
-        console.log("line!");
-        console.log(lines);
         
-        setResultStation(foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"]);
+        const data = GetStation(line,station == "서울" ? "서울역" : station);
+        const foo = await data.then((result) => result.data);
+
+        try{
+            const errorContact = foo["SearchInfoBySubwayNameService"]["row"];
+            setLines((prev: any) => {
+                const temp = [];
+                for(let i = 0; i < foo["SearchInfoBySubwayNameService"]["row"].length; i++){
+                    const tmp = foo["SearchInfoBySubwayNameService"]["row"][i]["LINE_NUM"];
+                    temp.push(tmp);
+                }
+                prev = temp;
+                return prev;
+            });
+
+            setResultStation(foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"] == "서울역" ? foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"] :` ${foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"]}역`);
+        } catch(e){
+            console.log(e);
+            setLines(["해당 역이 없습니다."]);
+            setResultStation("결과 없음.");
+        }
+        
+        
         setStation("");
     }
 
@@ -86,7 +74,7 @@ import { InputStyle, lineStyle } from "./StationInputStyle";
             </form>
             <div>
                 <div style={lineStyle}>
-                    검색결과: {resultStation}역
+                    검색결과: {resultStation}
                 </div>
                 {lines.map((e:any) =>{
                     return (
