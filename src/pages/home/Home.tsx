@@ -5,13 +5,11 @@ import Routers from "../../config/router/Routes";
 import { HomeBodyStyle, HomeHeaderStyle, HomeInputStyle } from "./HomeStyle";
 
 
-
 const Home = () => {
     const navigate = useNavigate();
 
     const onClick = (event: React.MouseEvent<HTMLInputElement>) => {
         navigate(event.currentTarget.name);
-        
     }
 
     return (
