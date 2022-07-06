@@ -1,8 +1,9 @@
 import Header from "../../components/Header";
+import { MetCostStyle } from "./MetCostStyle";
 
 const MetroCostStat = () => {
     return (
-        <div>
+        <div style={MetCostStyle}>
             <Header />
             met cost
         </div>

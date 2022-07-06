@@ -1,76 +1,57 @@
-import { AxiosResponse } from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetStation } from "../../api/GetStation";
-import { useGetMetroAtoZ } from "../../api/metAtoZ/MetAtoZAPI";
 import Header from "../../components/Header";
-import { InputStyle, lineStyle } from "./StationInputStyle";
+import { InputStyle, lineStyle, MetroAtoZStyle } from "./StationInputStyle";
 
- const MetroAtoZ = () => {
+const MetroAtoZ = () => {
     
     const [station, setStation] = useState<string>("");
-    const [line, setLine] = useState<string>("01호선");
     const [resultStation,setResultStation] = useState("");
-
     const [lines, setLines] = useState<any>([]);
-    // const {data, error} = GetStation(line,station);
 
     const OnClick = async () => {
-        
-        const data = GetStation(line,station == "서울" ? "서울역" : station);
+        const data = GetStation(station == "서울" ? "서울역" : station);
         const foo = await data.then((result) => result.data);
 
         try{
             const errorContact = foo["SearchInfoBySubwayNameService"]["row"];
-            setLines((prev: any) => {
-                const temp = [];
+            /* setLines((prev: any) => {
+
+                //? BEFORE: 고전적 방식의 데이터 처리
+                 const temp = [];
                 for(let i = 0; i < foo["SearchInfoBySubwayNameService"]["row"].length; i++){
                     const tmp = foo["SearchInfoBySubwayNameService"]["row"][i]["LINE_NUM"];
                     temp.push(tmp);
-                }
+                } 
+                //? AFTER: Spread 연산자를 활용한 데이터 처리
+                const temp = [...foo["SearchInfoBySubwayNameService"]["row"]];
+                
                 prev = temp;
                 return prev;
-            });
+            }); */
+            setLines([...foo["SearchInfoBySubwayNameService"]["row"]]);
 
             setResultStation(foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"] == "서울역" ? foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"] :` ${foo["SearchInfoBySubwayNameService"]["row"][0]["STATION_NM"]}역`);
         } catch(e){
             console.log(e);
             setLines(["해당 역이 없습니다."]);
-            setResultStation("결과 없음.");
+            setResultStation("조회 결과가 없습니다.");
         }
-        
         
         setStation("");
     }
 
     const OnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
         const {target: {value}} = e;
         setStation(value);
     }
 
-    const OnSelectLine = (e:any) => {
-        const {target: {value}} = e;
-        setLine(value);
-    }
-
     return (
-        <div>
+        <div style={MetroAtoZStyle}>
             <Header />
             <form >
-                {/* <select name="lines" onChange={OnSelectLine}>
-                    <option value="01호선">01호선</option>
-                    <option value="1호선">1호선</option>
-                    <option value="2호선">2호선</option>
-                    <option value="3호선">3호선</option>
-                    <option value="4호선">4호선</option>
-                    <option value="5호선">5호선</option>
-                    <option value="6호선">6호선</option>
-                    <option value="7호선">7호선</option>
-                    <option value="8호선">8호선</option>
-                    <option value="9호선">9호선</option>
-                </select> */}
                 <input style={InputStyle}type="text" name="station" onChange={OnChange} value={station} placeholder="역을 제외하고 입력해주세요(ex. 강남역 -> 강남)"/>
-                <input type="button" value="Click me" onClick={OnClick}/>
+                <input type="button" value="검색" onClick={OnClick}/>
             </form>
             <div>
                 <div style={lineStyle}>
@@ -79,7 +60,7 @@ import { InputStyle, lineStyle } from "./StationInputStyle";
                 {lines.map((e:any) =>{
                     return (
                         <div style={lineStyle}>
-                            {e}
+                            {e["LINE_NUM"]}
                         </div>
                     )
                 })}

@@ -1,20 +1,48 @@
-import React, { useState } from "react";
+import { background, color, Divider } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Routers from "../config/router/Routes";
-import { ButtonStyle, HeaderComponentStyle, HeaderStyle } from "./HeaderStyle";
+import { colors } from "../theme/MetroThemes";
+import { ButtonStyle, HeaderComponentStyle, HeaderStyle, HideHeaderStyle, MinHeaderStyle } from "./HeaderStyle";
 
 
 
 const Header = () => {
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
+
+    const handleResize = () => {
+        setWindowSize({
+            width: window.innerWidth,
+            height: window.innerHeight
+        })
+    }
+
     const [isExpanded, setIsExpanded] = useState(true);
 
     const ToggleHeader = () => {
         setIsExpanded((prev) => !prev);
     }
 
+    useEffect(()=> {
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize',handleResize);
+        }
+    },[]);
+
     return (
         isExpanded?
-        (<div style={HeaderStyle}>
+        (<div style={{
+            backgroundColor: colors.primary[700],
+            height: "100vh",
+            width:"250px",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "block"
+        }}>
             <Link to={Routers.HOME.path}>
                 <div 
                     style={HeaderComponentStyle}>
@@ -30,21 +58,19 @@ const Header = () => {
             <Link to={Routers.POPULATIONSTAT.path}>
                 <div 
                     style={HeaderComponentStyle}>
-                    역별 이용 인구
+                    실시간 도착 정보
                 </div>
             </Link>
-            <Link to={Routers.FREEORCASH.path}>
-                <div 
-                    style={HeaderComponentStyle}>
-                    역별 유,무임 승차 인원
-                </div>
-            </Link>
-        <input style={ButtonStyle} type="button" value="숨기기" onClick={ToggleHeader} />
+            <div style={ButtonStyle}>
+                <div style={HeaderComponentStyle} onClick={ToggleHeader}> 숨기기 </div>
+            </div>
         </div>
         )
         : (   
-            <div style={HeaderStyle}>
-                <input style={ButtonStyle} type="button" value="펼치기" onClick={ToggleHeader} />
+            <div style={HideHeaderStyle}>
+                <div style={ButtonStyle}>
+                    <div style={HeaderComponentStyle} onClick={ToggleHeader}> 펼치기 </div>
+                </div>
             </div>
         )
     );
